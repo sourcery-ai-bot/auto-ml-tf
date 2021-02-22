@@ -13,8 +13,7 @@ Para executar o script `main.py` verifique se os pré-requisitos estão devidame
 - [![Shutil](https://img.shields.io/badge/shutil-1.7.0-orange.svg?logo=shutil&logoColor=white)](https://pypi.org/project/pytest-shutil/)
 - [![OpenCV](https://img.shields.io/badge/opencv-4.5.1-yellow.svg?logo=shutil&logoColor=white)](https://pypi.org/project/opencv-python/)
 <br/>
-<b>Caso você certifica que false alguma biblioteca, basta dar dois clics na imagem de cada biblioteca e efetuar a installação via gerenciador de arquivos `PIP`.</b>
-<b>ou se preferir installar todas as depedencias de uma só vez, basta executar o comando a seguir: </b>
+<b>Caso você certifica que false alguma biblioteca, basta dar dois clics na imagem de cada biblioteca e efetuar a installação via gerenciador de arquivos `PIP` ou se preferir instalar todas as depedencias de uma só vez, basta executar o comando a seguir: </b>
 
 `
 $ pip install -r requirements.txt
