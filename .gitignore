@@ -4,6 +4,6 @@ train
 scripts/write_file.py
 records/train.record
 records/test.record
-labels_maps/label_map.pbtxt
+label_maps/label_map.pbtxt
 csvs/test_labels.csv
 csvs/train_labels.csv
