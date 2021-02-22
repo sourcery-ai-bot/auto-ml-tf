@@ -23,7 +23,6 @@ flags = tf.compat.v1.app.flags
 flags.DEFINE_string('csv_input', '', 'Path to the CSV input')
 flags.DEFINE_string('image_dir', '', 'Path to the image directory')
 flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
-flags.DEFINE_boolean('gerar_labelMap', False, 'Gerar label map file')
 FLAGS = flags.FLAGS
 
 
@@ -87,7 +86,12 @@ def create_tf_example(group, path, classes_int):
     return tf_example
 
 def write_pbtxt_file(class_int):
-  new_file = open('label_map.pbtxt', 'w+')
+  if (os.path.isdir('./label_maps')==False):
+    try:
+      os.mkdir('./label_maps')
+    except OSError:
+      print ("Creation of the directory %s failed" % './label_maps')
+  new_file = open('./label_maps/label_map.pbtxt', 'w+')
   for label, label_int in class_int.items():
     line = "item {\n\tid: %d\n\t'name': %s\n}\n\n"%(label_int, label)
     new_file.write(line)
@@ -106,8 +110,8 @@ def main(_):
 
     writer.close()
     output_path = os.path.join(os.getcwd(), FLAGS.output_path)
-    if FLAGS.gerar_labelMap:
-      write_pbtxt_file(class_int)
+
+    write_pbtxt_file(class_int)
     print('Successfully created the TFRecords: {}'.format(output_path))
 
 if __name__ == '__main__':

@@ -69,6 +69,12 @@ def page_converted_record(state):
         
         try:
             print('\033[31m'+'Conversao xml iniciado'+'\033[0;0m')
+            
+            if (os.path.isdir('./csvs')==False):
+                try:
+                    os.mkdir('./csvs')
+                except OSError:
+                    print ("Creation of the directory %s failed" % './csvs')
 
             os.system('python scripts/xml_to_csv.py --input {} \
                 --output ./csvs/ --file {}'.format('train', 'train'))
@@ -81,6 +87,12 @@ def page_converted_record(state):
             raise Exception("Error while running the script xml_to_csv.py")
         
         if state.labelMap:
+
+            if (os.path.isdir('./records')==False):
+                try:
+                    os.mkdir('./records')
+                except OSError:
+                    print ("Creation of the directory %s failed" % './records')
             try:
                 print('\033[31m'+'Geracao tfrecord iniciado'+'\033[0;0m')
 
@@ -90,8 +102,7 @@ def page_converted_record(state):
                 
                 os.system('python scripts/generate_tfrecord.py \
                     --csv_input=csvs/test_labels.csv --image_dir=./test \
-                    --output_path=records/test.record \
-                    --gerar_labelMap={}'.format(state.labelMap))
+                    --output_path=records/test.record')
 
                 print('\033[31m'+'Geracao tfrecord Finalizado'+'\033[0;0m')
             except:
