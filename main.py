@@ -36,11 +36,12 @@ def page_dashboard(state):
 
 def page_converted_record(state):
     st.title("Converter os arquivos CSV para RECORD")
-
+    state.labelMap = st.checkbox("Labels criada, gerar label map", state.labelMap)
     if st.button('Converter'):
         try:
-           os.system(
-            'python scripts/opencv_object_tracking.py \
+            print('\033[31m'+'Gerar samples iniciado'+'\033[0;0m')
+            os.system(
+                'python scripts/opencv_object_tracking.py \
                 --video {} \
                 --tracker {} \
                 --label {} \
@@ -50,39 +51,52 @@ def page_converted_record(state):
                 --cropimages {} \
                 '.format(state.video, state.track, state.label,
                     state.voc, state.cropImage))
+            print('\033[31m'+'Gerar samples finalizado'+'\033[0;0m')
         except:
             st.error("Error while running the script open_object_tracking.py")
             raise Exception("Error while running the script open_object_tracking.py")
         
         try:
+            print('\033[31m'+'Random samples iniciado'+'\033[0;0m')
             os.system(
                 'python scripts/random_samples.py --folder images --train_num {} \
                     '.format(state.data_train)
             )
+            print('\033[31m'+'Random samples Finalizado'+'\033[0;0m')
         except:
             st.error("Error while running the script random_sample.py")
             raise Exception("Error while running the script random_sample.py")
         
         try:
+            print('\033[31m'+'Conversao xml iniciado'+'\033[0;0m')
+
             os.system('python scripts/xml_to_csv.py --input {} \
                 --output ./csvs/ --file {}'.format('train', 'train'))
             os.system('python scripts/xml_to_csv.py --input {} \
                 --output ./csvs/ --file {}'.format('test', 'test'))
+
+            print('\033[31m'+'Conversao xml Finalizado'+'\033[0;0m')
         except:
             st.error("Error while running the script xml_to_csv.py")
             raise Exception("Error while running the script xml_to_csv.py")
         
-        try:
-            os.system('python scripts/generate_tfrecord.py \
-                --csv_input=csvs/train_labels.csv --image_dir=./train \
-                --output_path=train.record')
-            
-            os.system('python scripts/generate_tfrecord.py \
-                --csv_input=csvs/test_labels.csv --image_dir=./test \
-                --output_path=test.record')
-        except:
-            st.error("Error while running the script generate_tfrecord.py")
-            raise Exception("Error while running the script generate_tfrecord.py")
+        if state.labelMap:
+            try:
+                print('\033[31m'+'Geracao tfrecord iniciado'+'\033[0;0m')
+
+                os.system('python scripts/generate_tfrecord.py \
+                    --csv_input=csvs/train_labels.csv --image_dir=./train \
+                    --output_path=records/train.record')
+                
+                os.system('python scripts/generate_tfrecord.py \
+                    --csv_input=csvs/test_labels.csv --image_dir=./test \
+                    --output_path=records/test.record \
+                    --gerar_labelMap={}'.format(state.labelMap))
+
+                print('\033[31m'+'Geracao tfrecord Finalizado'+'\033[0;0m')
+            except:
+                st.error("Error while running the script generate_tfrecord.py")
+                raise Exception("Error while running the script generate_tfrecord.py")
 
         st.success("Conversão realizada com sucesso!☺")
         
@@ -90,7 +104,7 @@ def page_converted_record(state):
         st.dataframe(pd.read_csv("./csvs/train_labels.csv"), width=800, height=500)
         
         st.write("Dados de teste")
-        st.dataframe(pd.read_csv("./csvs/teste_labels.csv"), width=800, height=500)
+        st.dataframe(pd.read_csv("./csvs/test_labels.csv"), width=800, height=500)
 
 def page_object_tracking(state):
     st.title("Bem vindo ao Object tracking")
