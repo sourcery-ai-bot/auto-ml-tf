@@ -50,11 +50,11 @@ def changing_directories(folder, samples_train, samples_test):
             os.mkdir(path_train)
         except OSError:
             print ("Creation of the directory %s failed" % path_train)
-  if (os.path.isdir(path_train)==False):
+  if (os.path.isdir(path_test)==False):
         try:
             os.mkdir(path_test)
         except OSError:
-            print ("Creation of the directory %s failed" % path_test)
+            print("Creation of the directory %s failed" % path_test)
 
   source_dir = folder
 
@@ -75,6 +75,8 @@ def changing_directories(folder, samples_train, samples_test):
     if directory_test[-3:] == 'xml':
       change_file(directory_test, test_dir, "test")
     shutil.move(directory_test, test_dir)
+  
+  os.rmdir(folder)
 
 if __name__ == '__main__':
   

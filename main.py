@@ -56,18 +56,33 @@ def page_converted_record(state):
         
         try:
             os.system(
-                'python scripts/random_samples.py --folder images --train_num {}'.format(state.data_train)
+                'python scripts/random_samples.py --folder images --train_num {} \
+                    '.format(state.data_train)
             )
         except:
             st.error("Error while running the script random_sample.py")
             raise Exception("Error while running the script random_sample.py")
         
         try:
-            os.system('python scripts/xml_to_csv.py --input {} --output ./csvs/ --file {}'.format('train', 'train'))
-            os.system('python scripts/xml_to_csv.py --input {} --output ./csvs/ --file {}'.format('test', 'teste'))
+            os.system('python scripts/xml_to_csv.py --input {} \
+                --output ./csvs/ --file {}'.format('train', 'train'))
+            os.system('python scripts/xml_to_csv.py --input {} \
+                --output ./csvs/ --file {}'.format('test', 'test'))
         except:
             st.error("Error while running the script xml_to_csv.py")
             raise Exception("Error while running the script xml_to_csv.py")
+        
+        try:
+            os.system('python scripts/generate_tfrecord.py \
+                --csv_input=csvs/train_labels.csv --image_dir=./train \
+                --output_path=train.record')
+            
+            os.system('python scripts/generate_tfrecord.py \
+                --csv_input=csvs/test_labels.csv --image_dir=./test \
+                --output_path=test.record')
+        except:
+            st.error("Error while running the script generate_tfrecord.py")
+            raise Exception("Error while running the script generate_tfrecord.py")
 
         st.success("Conversão realizada com sucesso!☺")
         
