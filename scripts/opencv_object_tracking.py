@@ -29,8 +29,7 @@ def rescale_images(percentsizeimage,image):
         width = int(image.shape[1] * scale_percent)
         height = int(image.shape[0] * scale_percent)
         dsize = (width, height)
-        output = cv2.resize(image, dsize,cv2.INTER_NEAREST)
-        return output
+        return cv2.resize(image, dsize,cv2.INTER_NEAREST)
             
 def save_images(directory,filename,image):
     path = os.getcwd()+os.path.sep+directory
@@ -95,17 +94,16 @@ def save_xml_coordinates(imagesdirectory,folder,filename,image,box,label):
     tree.write(pathfull+os.path.sep+filename.replace('.jpg', '.xml'))                
             
 def save_yolo_format(imagesdirectory,filename,point_1, point_2, width, height):
-    _ = os.path.sep
-    pathfull = os.getcwd()+_+imagesdirectory 
-    filename = pathfull +_+filename.replace('jpg','txt')
-    f= open(filename,"w+")
-    x_center = (point_1[0] + point_2[0]) / float(2.0 * width)
-    y_center = (point_1[1] + point_2[1]) / float(2.0 * height)
-    x_width = float(abs(point_2[0] - point_1[0])) / width
-    y_height = float(abs(point_2[1] - point_1[1])) / height
-    items = map(str, [indexYoloLabel, x_center, y_center, x_width, y_height])    
-    f.write(' '.join(items))
-    f.close()
+        _ = os.path.sep
+        pathfull = os.getcwd()+_+imagesdirectory
+        filename = pathfull +_+filename.replace('jpg','txt')
+        with open(filename,"w+") as f:
+                x_center = (point_1[0] + point_2[0]) / float(2.0 * width)
+                y_center = (point_1[1] + point_2[1]) / float(2.0 * height)
+                x_width = float(abs(point_2[0] - point_1[0])) / width
+                y_height = float(abs(point_2[1] - point_1[1])) / height
+                items = map(str, [indexYoloLabel, x_center, y_center, x_width, y_height])
+                f.write(' '.join(items))
     
 def str2bool(v):
     if isinstance(v, bool):
